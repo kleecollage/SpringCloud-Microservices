@@ -18,6 +18,9 @@ public class Product {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Transient
+    private int port;
+
     public long getId() {
         return id;
     }
@@ -48,5 +51,13 @@ public class Product {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }
