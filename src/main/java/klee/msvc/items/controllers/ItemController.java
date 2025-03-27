@@ -2,6 +2,7 @@ package klee.msvc.items.controllers;
 
 import klee.msvc.items.models.Item;
 import klee.msvc.items.services.IItemService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class ItemController {
 
     private final IItemService service;
-    public ItemController(IItemService service) {
+    public ItemController(@Qualifier("itemServiceWebClient") IItemService service) {
         this.service = service;
     }
 

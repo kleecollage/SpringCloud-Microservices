@@ -1,12 +1,15 @@
 package klee.msvc.items.services;
 
 import klee.msvc.items.models.Item;
+import klee.msvc.items.models.ProductDto;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+// @Primary
 @Service
 public class ItemServiceWebClient implements IItemService {
 
@@ -17,11 +20,42 @@ public class ItemServiceWebClient implements IItemService {
 
     @Override
     public List<Item> findAll() {
-        return List.of();
+        return this.client.build()
+                .get()
+                .uri("http://msvc-products/api/products")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(ProductDto.class)
+                .map(product -> new Item(product, new Random().nextInt(10)+1))
+                .collectList()
+                .block();
     }
 
     @Override
     public Optional<Item> findById(long id) {
-        return Optional.empty();
+        Map<String, Long> params = new HashMap<>();
+        params.put("id", id);
+        return Optional.ofNullable(client.build()
+                .get()
+                .uri("http://msvc-products/api/products/{id}", params)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(ProductDto.class)
+                .map(product -> new Item(product, new Random().nextInt(10)+1))
+                .block());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
