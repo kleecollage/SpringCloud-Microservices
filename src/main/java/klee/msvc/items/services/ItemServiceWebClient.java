@@ -22,7 +22,6 @@ public class ItemServiceWebClient implements IItemService {
     public List<Item> findAll() {
         return this.client.build()
                 .get()
-                .uri("http://msvc-products/api/products")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(ProductDto.class)
@@ -38,7 +37,7 @@ public class ItemServiceWebClient implements IItemService {
         try {
             return Optional.ofNullable(client.build()
                     .get()
-                    .uri("http://msvc-products/api/products/{id}", params)
+                    .uri("/{id}", params)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .bodyToMono(ProductDto.class)
