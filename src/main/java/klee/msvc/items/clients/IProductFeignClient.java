@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(url = "localhost:8000")
+@FeignClient(name = "msvc-products", url = "localhost:8080/api/products")
 public interface IProductFeignClient {
     @GetMapping
     List<ProductDto> findAll();

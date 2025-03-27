@@ -1,5 +1,6 @@
 package klee.msvc.items.services;
 
+import feign.FeignException;
 import klee.msvc.items.clients.IProductFeignClient;
 import klee.msvc.items.models.Item;
 import klee.msvc.items.models.ProductDto;
@@ -27,8 +28,11 @@ public class ItemServiceFeign implements IItemService{
 
     @Override
     public Optional<Item> findById(long id) {
-        ProductDto product = client.details(id);
-        if (product == null) return Optional.empty();
-        return Optional.of(new Item(product, new Random().nextInt(10)+1));
+        try {
+            ProductDto product = client.details(id);
+            return Optional.of(new Item(product, new Random().nextInt(10)+1));
+        } catch (FeignException e) {
+            return Optional.empty();
+        }
     }
 }
