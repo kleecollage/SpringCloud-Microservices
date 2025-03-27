@@ -10,3 +10,4 @@ public interface IItemService {
     List<ProductDto> findAll();
     Optional<Item> findById(long id);
 }
+
