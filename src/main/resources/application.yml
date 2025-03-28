@@ -11,6 +11,14 @@ spring:
             - Path=/api/products/**
           filters:
             - StripPrefix=0
+#            GET CUSTOM FILTERS METHOD 1
+#            - name: SampleCookie
+#              args:
+#                message: Hi, this is my custom message for products
+#                name: user
+#                value: KleeCollage
+#            GET CUSTOM FILTERS METHOD 2 according to our class: msg, name, value
+            - ExampleCookie=Hi this is my custom message for products, user, KleeC
         - id: msvc-items
           uri: lb://msvc-items
           predicates:
