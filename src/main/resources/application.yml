@@ -1,3 +1,26 @@
+# YML HAS PRIORITY OVER PROGRAMMATIC CONFIG
+resilience4j:
+  circuitbreaker:
+    configs:
+      default: # This is the name of config (can be anything)
+        sliding-window-size: 6
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 4
+        slow-call-duration-threshold: 3s
+        slow-call-rate-threshold: 50
+    instances:
+      products: # THIS NAME IS PROVIDED IN CONTROLLER
+        base-config: default
+
+  timelimiter:
+    configs:
+      default: # This is the name is of your choice
+        timeout-duration: 3s
+    instances:
+      products:
+        base-config: default
+
 spring:
   cloud:
     gateway:
@@ -16,6 +39,11 @@ spring:
 #            - Cookie=color, blue
 #            - Header=Content-Type, application/json
           filters:
+            - name: CircuitBreaker
+              args:
+                name: products
+                statusCodes: 500
+                fallbackUri: forward:/api/items/1
             - StripPrefix=0
 #            CUSTOM FILTERS METHOD 1
 #            - name: SampleCookie
