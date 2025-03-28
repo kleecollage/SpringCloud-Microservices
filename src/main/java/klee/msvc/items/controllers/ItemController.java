@@ -1,5 +1,6 @@
 package klee.msvc.items.controllers;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import klee.msvc.items.models.Item;
 import klee.msvc.items.models.ProductDto;
 import klee.msvc.items.services.IItemService;
@@ -50,6 +51,18 @@ public class ItemController {
             product.setPrice(500.50);
             return Optional.of(new Item(product, 5));
         });
+        if (itemOpt.isPresent()) {
+            return ResponseEntity.ok(itemOpt.get());
+        }
+        return ResponseEntity.status(404)
+                .body(Collections.singletonMap("message", "Product not found in products microservice"));
+    }
+
+
+    @CircuitBreaker(name ="items") /* This decorator works only on the yml file */
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> details2(@PathVariable long id) {
+        Optional<Item> itemOpt = service.findById(id);
         if (itemOpt.isPresent()) {
             return ResponseEntity.ok(itemOpt.get());
         }
