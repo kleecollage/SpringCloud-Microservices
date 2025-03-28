@@ -63,9 +63,14 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- NOT NECESSARY WITH EUREKA -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-loadbalancer</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
