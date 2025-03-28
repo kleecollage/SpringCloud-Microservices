@@ -10,7 +10,7 @@ spring:
           predicates:
             # ALL THESE CONDITIONS ARE REQUIRED
             - Path=/api/products/**
-#            - Header=token, 123456
+            - Header=token, \d+
 #            - Method=GET,POST
 #            - Query=color, green
 #            - Cookie=color, blue
