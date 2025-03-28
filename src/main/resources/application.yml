@@ -1,6 +1,21 @@
 spring:
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
       routes:
         - id: msvc-products
           uri: lb://msvc-products
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - StripPrefix=0
+        - id: msvc-items
+          uri: lb://msvc-items
+          predicates:
+            - Path=/api/items/**
+          filters:
+            - StripPrefix=0
+#            - StripPrefix=1 -> REMOVE /api from path
+#            - StripPrefix=2 -> REMOVE /api/items from path
