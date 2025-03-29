@@ -2,11 +2,9 @@ package klee.msvc.products.controllers;
 
 import klee.msvc.products.entities.Product;
 import klee.msvc.products.services.IProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,4 +38,50 @@ public class ProductController {
 
         return ResponseEntity.notFound().build();
     }
+
+    @PostMapping
+    public ResponseEntity<Product> create(@RequestBody Product product) {
+        Product productNew = service.save(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productNew);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Product product) {
+        Optional<Product> productOptional = service.findById(id);
+        if (productOptional.isPresent()) {
+            Product productUpdate = productOptional.orElseThrow();
+            productUpdate.setName(product.getName());
+            productUpdate.setPrice(product.getPrice());
+            productUpdate.setCreatedAt(product.getCreatedAt());
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.save(productUpdate));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Optional<Product> productOptional = service.findById(id);
+        if (productOptional.isPresent()) {
+            this.service.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

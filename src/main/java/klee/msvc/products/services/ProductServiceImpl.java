@@ -2,7 +2,6 @@ package klee.msvc.products.services;
 
 import klee.msvc.products.entities.Product;
 import klee.msvc.products.repositories.IProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,4 +38,18 @@ public class ProductServiceImpl implements IProductService {
             return product;
         });
     }
+
+    @Override
+    @Transactional
+    public Product save(Product product) {
+        return this.repository.save(product);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(long id) {
+        repository.deleteById(id);
+    }
+
+
 }
