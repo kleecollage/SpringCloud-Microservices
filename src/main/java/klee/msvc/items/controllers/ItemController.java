@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,6 +113,23 @@ public class ItemController {
             return ResponseEntity.status(404)
                     .body(Collections.singletonMap("message", "Product not found in products microservice"));
         });
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDto create(@RequestBody ProductDto product) {
+        return service.save(product);
+    }
+
+    @PutMapping("/{id}")
+    public ProductDto update(@PathVariable long id, @RequestBody ProductDto product) {
+        return service.update(id, product);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable long id) {
+        service.delete(id);
     }
 
     public ResponseEntity<?> getFallBackMethodProduct(Throwable e) {
