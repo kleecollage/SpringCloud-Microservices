@@ -35,4 +35,20 @@ public class ItemServiceFeign implements IItemService{
             return Optional.empty();
         }
     }
+
+
+    @Override
+    public ProductDto save(ProductDto product) {
+        return null;
+    }
+
+    @Override
+    public ProductDto update(Long id, ProductDto product) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
 }
