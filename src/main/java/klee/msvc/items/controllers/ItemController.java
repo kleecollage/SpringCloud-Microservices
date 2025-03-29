@@ -3,8 +3,8 @@ package klee.msvc.items.controllers;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import klee.msvc.items.models.Item;
-import klee.msvc.items.models.ProductDto;
 import klee.msvc.items.services.IItemService;
+import klee.msvc.libscommons.entities.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class ItemController {
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
             // ALTERNATIVE PATH FOR ERRORS
-            ProductDto product = new ProductDto();
+            Product product = new Product();
             product.setCreatedAt(LocalDate.now());
             product.setId(1L);
             product.setName("Sony Camera");
@@ -117,12 +117,12 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto create(@RequestBody ProductDto product) {
+    public Product create(@RequestBody Product product) {
         return service.save(product);
     }
 
     @PutMapping("/{id}")
-    public ProductDto update(@PathVariable Long id, @RequestBody ProductDto product) {
+    public Product update(@PathVariable Long id, @RequestBody Product product) {
         return service.update(id, product);
     }
 
@@ -136,7 +136,7 @@ public class ItemController {
         System.out.println(e.getMessage());
         logger.error(e.getMessage());
         // ALTERNATIVE FOR ERRORS
-        ProductDto product = new ProductDto();
+        Product product = new Product();
         product.setCreatedAt(LocalDate.now());
         product.setId(1L);
         product.setName("Sony Camera");
@@ -149,7 +149,7 @@ public class ItemController {
             System.out.println(e.getMessage());
             logger.error(e.getMessage());
             // ALTERNATIVE FOR ERRORS
-            ProductDto product = new ProductDto();
+            Product product = new Product();
             product.setCreatedAt(LocalDate.now());
             product.setId(1L);
             product.setName("Sony Camera");

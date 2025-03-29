@@ -1,22 +1,24 @@
 package klee.msvc.items.models;
 
+import klee.msvc.libscommons.entities.Product;
+
 public class Item {
-    private ProductDto product;
+    private Product product;
     private int quantity;
 
     public Item() {
     }
 
-    public Item(ProductDto product, int quantity) {
+    public Item(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
 
-    public ProductDto getProduct() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setProduct(ProductDto product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 

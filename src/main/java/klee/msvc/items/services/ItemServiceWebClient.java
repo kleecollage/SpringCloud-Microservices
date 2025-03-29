@@ -1,13 +1,11 @@
 package klee.msvc.items.services;
 
 import klee.msvc.items.models.Item;
-import klee.msvc.items.models.ProductDto;
+import klee.msvc.libscommons.entities.Product;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import javax.print.attribute.standard.Media;
 import java.util.*;
 
 // @Primary
@@ -25,7 +23,7 @@ public class ItemServiceWebClient implements IItemService {
                 .get()
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToFlux(ProductDto.class)
+                .bodyToFlux(Product.class)
                 .map(product -> new Item(product, new Random().nextInt(10)+1))
                 .collectList()
                 .block();
@@ -41,7 +39,7 @@ public class ItemServiceWebClient implements IItemService {
                     .uri("/{id}", params)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-                    .bodyToMono(ProductDto.class)
+                    .bodyToMono(Product.class)
                     .map(product -> new Item(product, new Random().nextInt(10)+1))
                     .block());
 //        } catch (WebClientResponseException e) {
@@ -50,18 +48,18 @@ public class ItemServiceWebClient implements IItemService {
     }
 
     @Override
-    public ProductDto save(ProductDto product) {
+    public Product save(Product product) {
         return client.build()
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(product)
                 .retrieve()
-                .bodyToMono(ProductDto.class)
+                .bodyToMono(Product.class)
                 .block();
     }
 
     @Override
-    public ProductDto update(Long id, ProductDto product) {
+    public Product update(Long id, Product product) {
         Map<String, Long> params = new HashMap<>();
         params.put("id", id);
         return client.build()
@@ -71,7 +69,7 @@ public class ItemServiceWebClient implements IItemService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(product)
                 .retrieve()
-                .bodyToMono(ProductDto.class)
+                .bodyToMono(Product.class)
                 .block();
     }
 

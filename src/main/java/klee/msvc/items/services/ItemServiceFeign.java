@@ -3,7 +3,7 @@ package klee.msvc.items.services;
 import feign.FeignException;
 import klee.msvc.items.clients.IProductFeignClient;
 import klee.msvc.items.models.Item;
-import klee.msvc.items.models.ProductDto;
+import klee.msvc.libscommons.entities.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class ItemServiceFeign implements IItemService{
     @Override
     public Optional<Item> findById(long id) {
         try {
-            ProductDto product = client.details(id);
+            Product product = client.details(id);
             return Optional.of(new Item(product, new Random().nextInt(10)+1));
         } catch (FeignException e) {
             return Optional.empty();
@@ -37,12 +37,12 @@ public class ItemServiceFeign implements IItemService{
     }
 
     @Override
-    public ProductDto save(ProductDto product) {
+    public Product save(Product product) {
         return client.create(product);
     }
 
     @Override
-    public ProductDto update(Long id, ProductDto product) {
+    public Product update(Long id, Product product) {
         return client.update(id, product);
     }
 

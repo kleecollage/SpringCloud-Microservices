@@ -1,6 +1,6 @@
 package klee.msvc.items.clients;
 
-import klee.msvc.items.models.ProductDto;
+import klee.msvc.libscommons.entities.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,16 +9,16 @@ import java.util.List;
 @FeignClient(name = "msvc-products", path = "/api/products")
 public interface IProductFeignClient {
     @GetMapping
-    List<ProductDto> findAll();
+    List<Product> findAll();
 
     @GetMapping("/{id}")
-    ProductDto details(@PathVariable Long id);
+    Product details(@PathVariable Long id);
 
     @PostMapping
-    public ProductDto create(@RequestBody ProductDto product);
+    public Product create(@RequestBody Product product);
 
     @PutMapping("/{id}")
-    ProductDto update(@PathVariable Long id, @RequestBody ProductDto product);
+    Product update(@PathVariable Long id, @RequestBody Product product);
 
     @DeleteMapping("/{id}")
     void delete(@PathVariable Long id);
