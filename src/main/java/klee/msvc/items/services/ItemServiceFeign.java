@@ -36,19 +36,18 @@ public class ItemServiceFeign implements IItemService{
         }
     }
 
-
     @Override
     public ProductDto save(ProductDto product) {
-        return null;
+        return client.create(product);
     }
 
     @Override
     public ProductDto update(Long id, ProductDto product) {
-        return null;
+        return client.update(id, product);
     }
 
     @Override
     public void delete(Long id) {
-
+        client.delete(id);
     }
 }
