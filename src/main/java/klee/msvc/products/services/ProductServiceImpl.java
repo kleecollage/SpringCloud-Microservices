@@ -1,6 +1,6 @@
 package klee.msvc.products.services;
 
-import klee.msvc.products.entities.Product;
+import klee.msvc.libscommons.entities.Product;
 import klee.msvc.products.repositories.IProductRepository;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;

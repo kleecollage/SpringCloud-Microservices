@@ -1,6 +1,6 @@
 package klee.msvc.products.controllers;
 
-import klee.msvc.products.entities.Product;
+import klee.msvc.libscommons.entities.Product;
 import klee.msvc.products.services.IProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
