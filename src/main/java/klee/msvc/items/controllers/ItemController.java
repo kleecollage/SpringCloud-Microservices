@@ -8,14 +8,13 @@ import klee.msvc.items.services.IItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -26,9 +25,25 @@ public class ItemController {
     private final IItemService service;
     private final CircuitBreakerFactory cBreakerFactory;
 
-    public ItemController(@Qualifier("itemServiceWebClient") IItemService service, CircuitBreakerFactory cBreakerFactory) {
+    /* This value is fetched from our config dir/msvc-items.properties*/
+    @Value("${configuration.text}")
+    private String text;
+
+    public ItemController(@Qualifier("itemServiceWebClient") IItemService service,
+                          CircuitBreakerFactory cBreakerFactory) {
         this.service = service;
         this.cBreakerFactory = cBreakerFactory;
+    }
+
+    /* Config values can be injected directly in the mapping */
+    @GetMapping("/fetch-configs")
+    public ResponseEntity<?> fetchConfig(@Value("${server.port}") String port) {
+        Map<String, String> json = new HashMap<>();
+        json.put("text", text);
+        json.put("port", port);
+        logger.info(port);
+        logger.info(text);
+        return ResponseEntity.ok(json);
     }
 
     @GetMapping
