@@ -7,9 +7,12 @@ import klee.msvc.items.models.ProductDto;
 import klee.msvc.items.services.IItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+@RefreshScope
 @RestController
 @RequestMapping("/api/items")
 public class ItemController {
@@ -28,6 +32,9 @@ public class ItemController {
     /* This value is fetched from our config dir/msvc-items.properties*/
     @Value("${configuration.text}")
     private String text;
+
+    @Autowired
+    private Environment env;
 
     public ItemController(@Qualifier("itemServiceWebClient") IItemService service,
                           CircuitBreakerFactory cBreakerFactory) {
@@ -43,6 +50,11 @@ public class ItemController {
         json.put("port", port);
         logger.info(port);
         logger.info(text);
+
+        if (env.getActiveProfiles().length > 0 && env.getActiveProfiles()[0].equals("dev")) {
+            json.put("author.name", env.getProperty("configuration.author.name"));
+            json.put("author.email", env.getProperty("configuration.author.email"));
+        }
         return ResponseEntity.ok(json);
     }
 
