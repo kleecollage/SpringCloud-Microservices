@@ -122,7 +122,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ProductDto update(@PathVariable long id, @RequestBody ProductDto product) {
+    public ProductDto update(@PathVariable Long id, @RequestBody ProductDto product) {
         return service.update(id, product);
     }
 
