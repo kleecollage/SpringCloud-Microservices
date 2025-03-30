@@ -1,5 +1,6 @@
 package klee.msvc.users.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -24,7 +27,6 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false)
     private String password;
@@ -35,4 +37,17 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(unique = true, nullable = false)
     private String email;
+
+    @Transient
+    private boolean admin = false;
+
+    @JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}
+    )
+    private List<Role> roles;
 }

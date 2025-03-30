@@ -5,7 +5,6 @@ import klee.msvc.users.entities.User;
 import klee.msvc.users.services.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -15,11 +14,9 @@ import java.util.Optional;
 public class UserController {
 
     private final IUserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserController(IUserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(IUserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -51,8 +48,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         if (userService.existsByUsername(user.getUsername()))
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
@@ -67,7 +62,6 @@ public class UserController {
     public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody User user) {
         if (userService.findById(id).isEmpty())
             return ResponseEntity.notFound().build();
-
         user.setId(id);
         User updatedUser = userService.update(id, user);
         return ResponseEntity.ok(updatedUser);
