@@ -65,3 +65,8 @@ spring:
             - AddResponseHeader=token-response, Ijk456
             - AddRequestParameter=name, KleeC
             - SetResponseHeader=Content-Type, text/plain
+        - id: msvc-users
+          uri: lb://msvc-users
+          predicates:
+            - Path=/api/users/**
+
