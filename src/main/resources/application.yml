@@ -60,7 +60,7 @@ spring:
           filters:
             - StripPrefix=0
 #            - StripPrefix=1 -> REMOVE /api from path
-#            - StripPrefix=2 -> REMOVE /api/items from path
+#            - StripPrefix=2 -> REMOVE /api/items from path ... and so on
             - AddRequestHeader=token-request, Xyz789
             - AddResponseHeader=token-response, Ijk456
             - AddRequestParameter=name, KleeC
@@ -69,4 +69,10 @@ spring:
           uri: lb://msvc-users
           predicates:
             - Path=/api/users/**
+        - id: msvc-oauth
+          uri: lb://msvc-oauth
+          predicates:
+            - Path=/api/security/**
+          filters:
+            - StripPrefix=2
 
