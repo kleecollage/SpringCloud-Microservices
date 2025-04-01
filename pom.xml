@@ -40,6 +40,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <!-- NEXT DEPENDENCIES SOLVE PROBLEMS IN MAC WITH WEBFLUX (CHOOSE 1) -->
+<!--            <dependency>-->
+<!--                <groupId>io.netty</groupId>-->
+<!--                <artifactId>netty-resolver-dns-native-macos</artifactId>-->
+<!--                <version>4.1.119.Final</version>-->
+<!--                <classifier>osx-aarch_64</classifier>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>io.netty</groupId>-->
+<!--                <artifactId>netty-all</artifactId>-->
+<!--                <version>4.1.113.Final</version>-->
+<!--            </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter</artifactId>
