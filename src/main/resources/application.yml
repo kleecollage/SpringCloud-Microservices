@@ -12,7 +12,6 @@ resilience4j:
     instances:
       products: # THIS NAME IS PROVIDED IN CONTROLLER
         base-config: default
-
   timelimiter:
     configs:
       default: # This is the name is of your choice
@@ -20,14 +19,35 @@ resilience4j:
     instances:
       products:
         base-config: default
-
 spring:
+  security:
+    oauth2:
+      # ####################   OAUTH CONFIG   #################### #
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9100
+      client:
+        registration:
+          client-app:
+            provider: spring
+            client-id: gateway-app
+            client-secret: 123456
+            authorization-grant-type: authorization_code
+            redirect-uri: http://127.0.0.1:8090/authorized
+            scope:
+              - openid
+              - profile
+            client-name: client-app
+        provider:
+          spring:
+            issuer-uri: http://127.0.0.1:9100
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
       routes:
+        # ####################   MICROSERVICE PRODUCTS   #################### #
         - id: msvc-products
           uri: lb://msvc-products
           predicates:
@@ -53,6 +73,7 @@ spring:
 #                value: KleeCollage
 #            CUSTOM FILTERS METHOD 2 according to our class: msg, name, value
             - ExampleCookie=Hi this is my custom message for products, user, KleeC
+        # ####################   MICROSERVICE ITEMS   #################### #
         - id: msvc-items
           uri: lb://msvc-items
           predicates:
@@ -65,10 +86,12 @@ spring:
             - AddResponseHeader=token-response, Ijk456
             - AddRequestParameter=name, KleeC
             - SetResponseHeader=Content-Type, text/plain
+        # ####################   MICROSERVICE USERS   #################### #
         - id: msvc-users
           uri: lb://msvc-users
           predicates:
             - Path=/api/users/**
+        # ####################   MICROSERVICE OAUTH   #################### #
         - id: msvc-oauth
           uri: lb://msvc-oauth
           predicates:
