@@ -17,7 +17,7 @@ public class SampleGlobalFilter implements Filter, Ordered {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }
 
