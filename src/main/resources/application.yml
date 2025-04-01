@@ -1,5 +1,6 @@
 # YML HAS PRIORITY OVER PROGRAMMATIC CONFIG
 resilience4j:
+  # ####################   CIRCUIT BREAKER   #################### #
   circuitbreaker:
     configs:
       default: # This is the name of config (can be anything)
@@ -21,8 +22,8 @@ resilience4j:
         base-config: default
 spring:
   security:
+    # ####################   OAUTH CONFIG   #################### #
     oauth2:
-      # ####################   OAUTH CONFIG   #################### #
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:9100
@@ -37,6 +38,9 @@ spring:
             scope:
               - openid
               - profile
+              # To work with scopes
+              # - write
+              # - read
             client-name: client-app
         provider:
           spring:
