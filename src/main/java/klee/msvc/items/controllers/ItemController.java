@@ -30,7 +30,7 @@ public class ItemController {
     private final IItemService service;
     private final CircuitBreakerFactory cBreakerFactory;
 
-    /* This value is fetched from our config dir/msvc-items.properties*/
+    /* This value is fetched from our config file in "$HOME/Documents/JavaProjects/Microservices/config"*/
     @Value("${configuration.text}")
     private String text;
 

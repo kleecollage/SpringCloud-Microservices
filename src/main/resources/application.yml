@@ -12,7 +12,6 @@ resilience4j:
     instances:
       items: # THIS NAME IS PROVIDED IN CONTROLLER
         base-config: default
-
   timelimiter:
     configs:
       default:
