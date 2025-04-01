@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebFluxSecurity
+// @EnableWebFluxSecurity // REACT WEBFLUX
 public class SecurityConfig {
     @Bean
     // SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception { // REACT WEBFLUX IMPL
