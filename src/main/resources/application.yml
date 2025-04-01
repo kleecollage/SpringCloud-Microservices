@@ -50,56 +50,57 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-        # ####################   MICROSERVICE PRODUCTS   #################### #
-        - id: msvc-products
-          uri: lb://msvc-products
-          predicates:
-            # ALL THESE CONDITIONS ARE REQUIRED
-            - Path=/api/products/**
-            - Header=token, \d+
-#            - Method=GET,POST
-#            - Query=color, green
-#            - Cookie=color, blue
-#            - Header=Content-Type, application/json
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: products
-                statusCodes: 500
-                fallbackUri: forward:/api/items/1
-            - StripPrefix=0
-#            CUSTOM FILTERS METHOD 1
-#            - name: SampleCookie
-#              args:
-#                message: Hi, this is my custom message for products
-#                name: user
-#                value: KleeCollage
-#            CUSTOM FILTERS METHOD 2 according to our class: msg, name, value
-            - ExampleCookie=Hi this is my custom message for products, user, KleeC
-        # ####################   MICROSERVICE ITEMS   #################### #
-        - id: msvc-items
-          uri: lb://msvc-items
-          predicates:
-            - Path=/api/items/**
-          filters:
-            - StripPrefix=0
-#            - StripPrefix=1 -> REMOVE /api from path
-#            - StripPrefix=2 -> REMOVE /api/items from path ... and so on
-            - AddRequestHeader=token-request, Xyz789
-            - AddResponseHeader=token-response, Ijk456
-            - AddRequestParameter=name, KleeC
-            - SetResponseHeader=Content-Type, text/plain
-        # ####################   MICROSERVICE USERS   #################### #
-        - id: msvc-users
-          uri: lb://msvc-users
-          predicates:
-            - Path=/api/users/**
-        # ####################   MICROSERVICE OAUTH   #################### #
-        - id: msvc-oauth
-          uri: lb://msvc-oauth
-          predicates:
-            - Path=/api/security/**
-          filters:
-            - StripPrefix=2
+      mvc:
+        routes:
+          # ####################   MICROSERVICE PRODUCTS   #################### #
+          - id: msvc-products
+            uri: lb://msvc-products
+            predicates:
+              # ALL THESE CONDITIONS ARE REQUIRED
+              - Path=/api/products/**
+              - Header=token, \d+
+  #            - Method=GET,POST
+  #            - Query=color, green
+  #            - Cookie=color, blue
+  #            - Header=Content-Type, application/json
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: products
+                  statusCodes: 500
+                  fallbackUri: forward:/api/items/1
+              - StripPrefix=0
+  #            CUSTOM FILTERS METHOD 1
+  #            - name: SampleCookie
+  #              args:
+  #                message: Hi, this is my custom message for products
+  #                name: user
+  #                value: KleeCollage
+  #            CUSTOM FILTERS METHOD 2 according to our class: msg, name, value
+              - ExampleCookie=Hi this is my custom message for products, user, KleeC
+          # ####################   MICROSERVICE ITEMS   #################### #
+          - id: msvc-items
+            uri: lb://msvc-items
+            predicates:
+              - Path=/api/items/**
+            filters:
+              - StripPrefix=0
+  #            - StripPrefix=1 -> REMOVE /api from path
+  #            - StripPrefix=2 -> REMOVE /api/items from path ... and so on
+              - AddRequestHeader=token-request, Xyz789
+              - AddResponseHeader=token-response, Ijk456
+              - AddRequestParameter=name, KleeC
+              - SetResponseHeader=Content-Type, text/plain
+          # ####################   MICROSERVICE USERS   #################### #
+          - id: msvc-users
+            uri: lb://msvc-users
+            predicates:
+              - Path=/api/users/**
+          # ####################   MICROSERVICE OAUTH   #################### #
+          - id: msvc-oauth
+            uri: lb://msvc-oauth
+            predicates:
+              - Path=/api/security/**
+            filters:
+              - StripPrefix=2
 
