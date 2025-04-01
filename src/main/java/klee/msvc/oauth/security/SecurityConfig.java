@@ -18,7 +18,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,12 +39,11 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     @Order(1)
-    SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 OAuth2AuthorizationServerConfigurer.authorizationServer();
@@ -52,13 +51,9 @@ public class SecurityConfig {
         http
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
                 .with(authorizationServerConfigurer, (authorizationServer) ->
-                        authorizationServer
-                                .oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
+                        authorizationServer.oidc(Customizer.withDefaults())	// Enable OpenID Connect 1.0
                 )
-                .authorizeHttpRequests((authorize) ->
-                        authorize
-                                .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
                 // Redirect to the login page when not authenticated from the
                 // authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions
@@ -74,16 +69,13 @@ public class SecurityConfig {
     /* RESTRICTED PATHS */
     @Bean
     @Order(2)
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-            throws Exception {
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests((auth) -> auth.anyRequest().authenticated())
                 // Form login handles the redirect to the login page from the
                 // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
-
+                .formLogin(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
@@ -109,12 +101,12 @@ public class SecurityConfig {
     RegisteredClientRepository registeredClientRepository() {
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("gateway-app")
-                .clientSecret("{noop}secret")
+                .clientSecret("{noop}123456")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8090/login/oauth2/code/gateway-app") /* THIS COMES DEFAULT */
-                .redirectUri("http://127.0.0.1:8090/authorize") /* WE NEED TO CREATE THIS */
+                .redirectUri("http://127.0.0.1:8090/login/oauth2/code/client-app") /* THIS COMES DEFAULT */
+                .redirectUri("http://127.0.0.1:8090/authorized") /* WE NEED TO CREATE THIS */
                 .postLogoutRedirectUri("http://127.0.0.1:8090/logout") /* WE NEED TO CREATE THIS */
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
@@ -161,3 +153,8 @@ public class SecurityConfig {
     }
 
 }
+
+
+
+
+
