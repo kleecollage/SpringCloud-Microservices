@@ -4,6 +4,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,9 +41,9 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -89,7 +90,7 @@ public class SecurityConfig {
     }
 
     /* SEED USERS FOR DEV */
-    /*
+    /* MOVE THIS LOGIC TO UserService TO WORK WITH OUR REGISTERED USERS
     @Bean
     UserDetailsService userDetailsService() {
         UserDetails userDetails = User.builder()
@@ -105,7 +106,7 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(userDetails, admin);
     }
-    */
+    /*
 
 
     /* CLIENT PARAMS */
@@ -126,6 +127,10 @@ public class SecurityConfig {
                 // TO WORK WITH SCOPE
                 // .scope("write")
                 // .scope("read")
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenTimeToLive(Duration.ofHours(8))
+                        .refreshTokenTimeToLive(Duration.ofDays(1))
+                        .build())
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
                 .build();
 

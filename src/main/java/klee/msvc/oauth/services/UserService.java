@@ -27,15 +27,20 @@ public class UserService implements UserDetailsService {
         Map<String, String> params = new HashMap<>();
         params.put("username", username);
         try {
-            User user = client.build().get().uri("/username/{username}", params)
+            User user = client.build().get().uri("api/users/username/{username}", params)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .bodyToMono(User.class)
                     .block();
+
+            if (user == null)
+                throw new UsernameNotFoundException("Usuer Not Found");
+
             List<GrantedAuthority> roles = user.getRoles()
                     .stream()
                     .map(role -> new SimpleGrantedAuthority(role.getName()))
                     .collect(Collectors.toList());
+
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
