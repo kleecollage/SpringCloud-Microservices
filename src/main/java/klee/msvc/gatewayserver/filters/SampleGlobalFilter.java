@@ -1,6 +1,8 @@
 package klee.msvc.gatewayserver.filters;
 
 import jakarta.servlet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +10,7 @@ import java.io.IOException;
 
 @Component
 public class SampleGlobalFilter implements Filter, Ordered {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public int getOrder() {
@@ -17,6 +20,7 @@ public class SampleGlobalFilter implements Filter, Ordered {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
+        logger.info("Call to filter SampleGlobalFilter::doFilter");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
