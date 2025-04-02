@@ -1,5 +1,6 @@
 package klee.msvc.oauth.services;
 
+import io.micrometer.tracing.Tracer;
 import klee.msvc.oauth.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,11 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final WebClient client;
+    private final Tracer tracer;
 
-    public UserService(WebClient client) {
+    public UserService(WebClient client, Tracer tracer) {
         this.client = client;
+        this.tracer = tracer;
     }
 
     @Override
@@ -47,6 +50,7 @@ public class UserService implements UserDetailsService {
                     .map(role -> new SimpleGrantedAuthority(role.getName()))
                     .collect(Collectors.toList());
             logger.info("User has successfully logged by username: {}", user );
+            tracer.currentSpan().tag("success.login", "User has successfully logged by user: " + user );
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
@@ -58,6 +62,7 @@ public class UserService implements UserDetailsService {
         } catch (WebClientResponseException e) {
             String error = "Error: user with name: " + username + " not exists" + "\n" + e.getMessage();
             logger.error(error);
+            tracer.currentSpan().tag("error.login.message", error + ": " + e.getMessage());
             throw new UsernameNotFoundException(error);
         }
     }
