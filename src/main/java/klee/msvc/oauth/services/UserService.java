@@ -1,7 +1,8 @@
 package klee.msvc.oauth.services;
 
 import klee.msvc.oauth.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,11 +20,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    private WebClient.Builder client;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final WebClient.Builder client;
+
+    public UserService(WebClient.Builder client) {
+        this.client = client;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Enter to login process UserService::loadUserByUsername with {}", username);
         Map<String, String> params = new HashMap<>();
         params.put("username", username);
         try {
@@ -34,13 +40,13 @@ public class UserService implements UserDetailsService {
                     .block();
 
             if (user == null)
-                throw new UsernameNotFoundException("Usuer Not Found");
+                throw new UsernameNotFoundException("User Not Found");
 
             List<GrantedAuthority> roles = user.getRoles()
                     .stream()
                     .map(role -> new SimpleGrantedAuthority(role.getName()))
                     .collect(Collectors.toList());
-
+            logger.info("User has successfully logged by username: {}", user );
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
@@ -50,7 +56,9 @@ public class UserService implements UserDetailsService {
                     true,
                     roles);
         } catch (WebClientResponseException e) {
-            throw new UsernameNotFoundException("Error: user with name: " + username + " not exists" + e.getMessage());
+            String error = "Error: user with name: " + username + " not exists" + "\n" + e.getMessage();
+            logger.error(error);
+            throw new UsernameNotFoundException(error);
         }
     }
 }
