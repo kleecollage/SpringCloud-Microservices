@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final WebClient.Builder client;
+    private final WebClient client;
 
-    public UserService(WebClient.Builder client) {
+    public UserService(WebClient client) {
         this.client = client;
     }
 
@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
         Map<String, String> params = new HashMap<>();
         params.put("username", username);
         try {
-            User user = client.build().get().uri("api/users/username/{username}", params)
+            User user = client.get().uri("api/users/username/{username}", params)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
                     .bodyToMono(User.class)
