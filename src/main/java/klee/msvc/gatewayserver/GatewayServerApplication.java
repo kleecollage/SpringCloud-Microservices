@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
 
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
@@ -24,6 +25,16 @@ public class GatewayServerApplication {
     RouterFunction<ServerResponse> routerConfig() {
         return route("msvc-products")
                 .route(path("/api/products/**"), http())
+                /* CUSTOM FILTER */
+                .filter((request, next) -> {
+                    ServerRequest modifiedRequest = ServerRequest
+                            .from(request)
+                            .header("message-request", "Any message to request")
+                            .build();
+                    ServerResponse response = next.handle(modifiedRequest);
+                    response.headers().add("message-response", "Any message for response");
+                    return response;
+                })
                 .before(stripPrefix(0))
                 .filter(lb("msvc-products"))
                 .filter(circuitBreaker(config -> config
