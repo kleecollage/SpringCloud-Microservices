@@ -64,6 +64,9 @@ public class ItemController {
                            @RequestHeader(name="token-request", required=false) String token) {
         System.out.println(name);
         System.out.println(token);
+        logger.info("Call to method ItemController::list()");
+        logger.info("Request Parameter: {}", name);
+        logger.info("Token: {}", token);
         return service.findAll();
     }
 
@@ -118,17 +121,20 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(@RequestBody Product product) {
+        logger.info("Creating Product: {}", product);
         return service.save(product);
     }
 
     @PutMapping("/{id}")
     public Product update(@PathVariable Long id, @RequestBody Product product) {
+        logger.info("Updating Product: {}", product);
         return service.update(id, product);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
+        logger.info("Deleting Product: {}", id);
         service.delete(id);
     }
 
