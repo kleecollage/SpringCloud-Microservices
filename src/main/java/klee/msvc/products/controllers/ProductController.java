@@ -24,8 +24,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> list() {
+    public List<Product> list(@RequestHeader(name = "message-request", required = false) String message) {
         logger.info("Enter into ProductController::list()");
+        logger.info("message: {}", message);
         return this.service.findAll();
     }
 
