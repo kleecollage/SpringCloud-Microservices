@@ -105,7 +105,7 @@ public class ItemController {
     /* TimeLimiter only handle alternatives in timeouts, do not open the circuit breaker */
     /* if you want to combine both, @CircuitBreaker must be declared */
     @CircuitBreaker(name = "items", fallbackMethod = "getFallBackMethodProduct2")
-    @TimeLimiter(name ="items") /* This decorator only works on the .yml file */
+    @TimeLimiter(name ="items") /* This decorator only works with the .yml file */
     @GetMapping("/details2/{id}")
     public CompletableFuture<?> details3(@PathVariable long id) {
         return CompletableFuture.supplyAsync(() -> {
