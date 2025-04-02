@@ -47,29 +47,31 @@ spring:
             issuer-uri: http://127.0.0.1:9100
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+#      discovery:
+#        locator:
+#          enabled: true
       mvc:
         routes:
           # ####################   MICROSERVICE PRODUCTS   #################### #
-          - id: msvc-products
-            uri: lb://msvc-products
-            predicates:
+          # This microservice config was moved to GatewayServerApplication
+#          - id: msvc-products
+#            uri: lb://msvc-products
+#            predicates:
               # ALL THESE CONDITIONS ARE REQUIRED
-              - Path=/api/products/**
-              - Header=token, \d+
+#              - Path=/api/products/**
+#              - Header=token, \d+
   #            - Method=GET,POST
   #            - Query=color, green
   #            - Cookie=color, blue
   #            - Header=Content-Type, application/json
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: products
-                  statusCodes: 500
-                  fallbackUri: forward:/api/items/1
-              - StripPrefix=0
+#            FILTERS ARE NOT SUPPORTED IN MVC, ONLY IN WEBFLUX AND REACTOR
+#            filters:
+#              - name: CircuitBreaker
+#                args:
+#                  name: products
+#                  statusCodes: 500
+#                  fallbackUri: forward:/api/items/1
+#              - StripPrefix=0
   #            CUSTOM FILTERS METHOD 1
   #            - name: SampleCookie
   #              args:
